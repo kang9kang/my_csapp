@@ -380,20 +380,20 @@ Disassembly of section .text:
   400f41:	5d                   	pop    %rbp
   400f42:	c3                   	retq   
 
-0000000000400f43 <phase_3>:
+0000000000400f43 <phase_3>: ;输入的字符串必须是 "0 207" or "1 311" or "2 707" or "3 256" or "4 389" or "5 206" or "6 682" or "7 327"，否则爆炸
   400f43:	48 83 ec 18          	sub    $0x18,%rsp
-  400f47:	48 8d 4c 24 0c       	lea    0xc(%rsp),%rcx
-  400f4c:	48 8d 54 24 08       	lea    0x8(%rsp),%rdx
-  400f51:	be cf 25 40 00       	mov    $0x4025cf,%esi
-  400f56:	b8 00 00 00 00       	mov    $0x0,%eax
-  400f5b:	e8 90 fc ff ff       	callq  400bf0 <__isoc99_sscanf@plt>
-  400f60:	83 f8 01             	cmp    $0x1,%eax
-  400f63:	7f 05                	jg     400f6a <phase_3+0x27>
+  400f47:	48 8d 4c 24 0c       	lea    0xc(%rsp),%rcx ;rcx = rsp + 12
+  400f4c:	48 8d 54 24 08       	lea    0x8(%rsp),%rdx ;rdx = rsp + 8
+  400f51:	be cf 25 40 00       	mov    $0x4025cf,%esi ;"%d %d"
+  400f56:	b8 00 00 00 00       	mov    $0x0,%eax ;eax = 0
+  400f5b:	e8 90 fc ff ff       	callq  400bf0 <__isoc99_sscanf@plt> ;将输入的字符串转换为整数
+  400f60:	83 f8 01             	cmp    $0x1,%eax 
+  400f63:	7f 05                	jg     400f6a <phase_3+0x27> ; eax > 1 跳转
   400f65:	e8 d0 04 00 00       	callq  40143a <explode_bomb>
-  400f6a:	83 7c 24 08 07       	cmpl   $0x7,0x8(%rsp)
+  400f6a:	83 7c 24 08 07       	cmpl   $0x7,0x8(%rsp) ;比较 rsp + 8 和 7
   400f6f:	77 3c                	ja     400fad <phase_3+0x6a>
-  400f71:	8b 44 24 08          	mov    0x8(%rsp),%eax
-  400f75:	ff 24 c5 70 24 40 00 	jmpq   *0x402470(,%rax,8)
+  400f71:	8b 44 24 08          	mov    0x8(%rsp),%eax ; eax = rsp + 8
+  400f75:	ff 24 c5 70 24 40 00 	jmpq   *0x402470(,%rax,8) ;跳转
   400f7c:	b8 cf 00 00 00       	mov    $0xcf,%eax
   400f81:	eb 3b                	jmp    400fbe <phase_3+0x7b>
   400f83:	b8 c3 02 00 00       	mov    $0x2c3,%eax
