@@ -343,7 +343,7 @@ Disassembly of section .text:
   400ede:	90                   	nop
   400edf:	90                   	nop
 
-0000000000400ee0 <phase_1>:
+0000000000400ee0 <phase_1>: ;输入的字符串必须是 "Border relations with Canada have never been better."，否则爆炸
   400ee0:	48 83 ec 08          	sub    $0x8,%rsp ;rdi = input 的地址
   400ee4:	be 00 24 40 00       	mov    $0x402400,%esi ;esi = ans 的地址
   400ee9:	e8 4a 04 00 00       	callq  401338 <strings_not_equal> ;比较两个字符串是否相等
@@ -353,29 +353,29 @@ Disassembly of section .text:
   400ef7:	48 83 c4 08          	add    $0x8,%rsp ;恢复栈
   400efb:	c3                   	retq   
 
-0000000000400efc <phase_2>:
-  400efc:	55                   	push   %rbp
+0000000000400efc <phase_2>: ;输入的字符串必须是 "1 2 4 8 16 32"，否则爆炸
+  400efc:	55                   	push   %rbp 
   400efd:	53                   	push   %rbx
-  400efe:	48 83 ec 28          	sub    $0x28,%rsp
-  400f02:	48 89 e6             	mov    %rsp,%rsi
-  400f05:	e8 52 05 00 00       	callq  40145c <read_six_numbers>
-  400f0a:	83 3c 24 01          	cmpl   $0x1,(%rsp)
-  400f0e:	74 20                	je     400f30 <phase_2+0x34>
+  400efe:	48 83 ec 28          	sub    $0x28,%rsp 
+  400f02:	48 89 e6             	mov    %rsp,%rsi ;rsi = rsp
+  400f05:	e8 52 05 00 00       	callq  40145c <read_six_numbers> 
+  400f0a:	83 3c 24 01          	cmpl   $0x1,(%rsp) ;比较第一个数是否为 1
+  400f0e:	74 20                	je     400f30 <phase_2+0x34> ;如果是 1，跳转到 400f30
   400f10:	e8 25 05 00 00       	callq  40143a <explode_bomb>
-  400f15:	eb 19                	jmp    400f30 <phase_2+0x34>
-  400f17:	8b 43 fc             	mov    -0x4(%rbx),%eax
-  400f1a:	01 c0                	add    %eax,%eax
-  400f1c:	39 03                	cmp    %eax,(%rbx)
-  400f1e:	74 05                	je     400f25 <phase_2+0x29>
-  400f20:	e8 15 05 00 00       	callq  40143a <explode_bomb>
-  400f25:	48 83 c3 04          	add    $0x4,%rbx
-  400f29:	48 39 eb             	cmp    %rbp,%rbx
-  400f2c:	75 e9                	jne    400f17 <phase_2+0x1b>
-  400f2e:	eb 0c                	jmp    400f3c <phase_2+0x40>
-  400f30:	48 8d 5c 24 04       	lea    0x4(%rsp),%rbx
-  400f35:	48 8d 6c 24 18       	lea    0x18(%rsp),%rbp
-  400f3a:	eb db                	jmp    400f17 <phase_2+0x1b>
-  400f3c:	48 83 c4 28          	add    $0x28,%rsp
+  400f15:	eb 19                	jmp    400f30 <phase_2+0x34> ;如果不是 1，跳转到 400f30
+  400f17:	8b 43 fc             	mov    -0x4(%rbx),%eax ;eax = *(rbx - 4)
+  400f1a:	01 c0                	add    %eax,%eax ;eax = eax * 2
+  400f1c:	39 03                	cmp    %eax,(%rbx) ;比较 eax 和 *(rbx)
+  400f1e:	74 05                	je     400f25 <phase_2+0x29>  ;如果相等，跳转到 400f25
+  400f20:	e8 15 05 00 00       	callq  40143a <explode_bomb> ;如果不相等，爆炸
+  400f25:	48 83 c3 04          	add    $0x4,%rbx ;rbx = rbx + 4
+  400f29:	48 39 eb             	cmp    %rbp,%rbx ;比较 rbx 和 rbp
+  400f2c:	75 e9                	jne    400f17 <phase_2+0x1b> ;如果 rbx != rbp，跳转到 400f17
+  400f2e:	eb 0c                	jmp    400f3c <phase_2+0x40> ;如果 rbx == rbp，跳转到 400f3c
+  400f30:	48 8d 5c 24 04       	lea    0x4(%rsp),%rbx ;rbx = rsp + 4
+  400f35:	48 8d 6c 24 18       	lea    0x18(%rsp),%rbp ;rbp = rsp + 24
+  400f3a:	eb db                	jmp    400f17 <phase_2+0x1b> ;跳转到 400f17
+  400f3c:	48 83 c4 28          	add    $0x28,%rsp ;恢复栈
   400f40:	5b                   	pop    %rbx
   400f41:	5d                   	pop    %rbp
   400f42:	c3                   	retq   
@@ -802,22 +802,22 @@ Disassembly of section .text:
   401457:	e8 c4 f7 ff ff       	callq  400c20 <exit@plt>
 
 000000000040145c <read_six_numbers>:
-  40145c:	48 83 ec 18          	sub    $0x18,%rsp
-  401460:	48 89 f2             	mov    %rsi,%rdx
-  401463:	48 8d 4e 04          	lea    0x4(%rsi),%rcx
-  401467:	48 8d 46 14          	lea    0x14(%rsi),%rax
-  40146b:	48 89 44 24 08       	mov    %rax,0x8(%rsp)
-  401470:	48 8d 46 10          	lea    0x10(%rsi),%rax
-  401474:	48 89 04 24          	mov    %rax,(%rsp)
-  401478:	4c 8d 4e 0c          	lea    0xc(%rsi),%r9
-  40147c:	4c 8d 46 08          	lea    0x8(%rsi),%r8
-  401480:	be c3 25 40 00       	mov    $0x4025c3,%esi
-  401485:	b8 00 00 00 00       	mov    $0x0,%eax
-  40148a:	e8 61 f7 ff ff       	callq  400bf0 <__isoc99_sscanf@plt>
-  40148f:	83 f8 05             	cmp    $0x5,%eax
-  401492:	7f 05                	jg     401499 <read_six_numbers+0x3d>
-  401494:	e8 a1 ff ff ff       	callq  40143a <explode_bomb>
-  401499:	48 83 c4 18          	add    $0x18,%rsp
+  40145c:	48 83 ec 18          	sub    $0x18,%rsp 
+  401460:	48 89 f2             	mov    %rsi,%rdx 
+  401463:	48 8d 4e 04          	lea    0x4(%rsi),%rcx ; 0x4(%rsi) is the first number
+  401467:	48 8d 46 14          	lea    0x14(%rsi),%rax ; 0x14(%rsi) is the last number
+  40146b:	48 89 44 24 08       	mov    %rax,0x8(%rsp) ; save the last number
+  401470:	48 8d 46 10          	lea    0x10(%rsi),%rax ; 0x10(%rsi) is the second number
+  401474:	48 89 04 24          	mov    %rax,(%rsp) ; save the second number
+  401478:	4c 8d 4e 0c          	lea    0xc(%rsi),%r9 ; 0xc(%rsi) is the third number
+  40147c:	4c 8d 46 08          	lea    0x8(%rsi),%r8 ; 0x8(%rsi) is the fourth number
+  401480:	be c3 25 40 00       	mov    $0x4025c3,%esi ; format string
+  401485:	b8 00 00 00 00       	mov    $0x0,%eax ; return value
+  40148a:	e8 61 f7 ff ff       	callq  400bf0 <__isoc99_sscanf@plt> ; read the six numbers
+  40148f:	83 f8 05             	cmp    $0x5,%eax ; check if the six numbers are read
+  401492:	7f 05                	jg     401499 <read_six_numbers+0x3d> ; if not, call explode_bomb
+  401494:	e8 a1 ff ff ff       	callq  40143a <explode_bomb> ; if not, call explode_bomb
+  401499:	48 83 c4 18          	add    $0x18,%rsp ; restore the stack
   40149d:	c3                   	retq   
 
 000000000040149e <read_line>:
